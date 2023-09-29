@@ -17,9 +17,19 @@ if __name__ == '__main__':
                          '/experiments/BOVIFOCR_project/datasets/bjgbiesseck/liveness/replay-attack/test']
     desired_extensions = ['.mov']
     output_folder_path = '/experiments/BOVIFOCR_project/datasets/bjgbiesseck/liveness/replay-attack_frames'
+
     
 
-    frame_idx_to_extract=[0]
+    # dataset OULU-NPU (diolkos)
+    input_folder_path = ['/nobackup/unico/datasets/liveness/oulu-npu/train',
+                         '/nobackup/unico/datasets/liveness/oulu-npu/test',
+                         '/nobackup/unico/datasets/liveness/oulu-npu/dev']
+    desired_extensions = ['.avi']
+
+    output_folder_path = '/nobackup/unico/datasets/liveness/oulu-npu/oulu-npu_all-frames'
+
+    # frame_idx_to_extract=[0]
+    frame_idx_to_extract=[-1]   # all frames
 
     for input_folder in input_folder_path:
         utils.extract_save_frames_from_videos(input_folder, desired_extensions,
