@@ -39,17 +39,23 @@ def extract_video_frames(video_path, frame_indexes):
     total_frames = count_frames(video_path)
     cap = cv2.VideoCapture(video_path)
     extracted_frames = []
+    extracted_frames_idx = []
+
+    if frame_indexes == -1 or -1 in frame_indexes:
+        frame_indexes = list(range(total_frames))
+
     for index in frame_indexes:
-        if index < total_frames:
+        if index >= 0 and index < total_frames:
             cap.set(cv2.CAP_PROP_POS_FRAMES, index)
             ret, frame = cap.read()
             if ret:
                 extracted_frames.append(frame)
+                extracted_frames_idx.append(index)
         else:
             print(f"Skipping index {index} as it's beyond total frame count.")
     
     cap.release()
-    return extracted_frames, total_frames
+    return extracted_frames, extracted_frames_idx, total_frames
 
 
 def extract_save_frames_from_videos(input_folder='', desired_extensions = ['.avi', '.mp4', '.mkv'], output_folder='', frame_idx_to_extract=[0]):
@@ -67,13 +73,13 @@ def extract_save_frames_from_videos(input_folder='', desired_extensions = ['.avi
             
             os.makedirs(output_subfolder, exist_ok=True)
             
-            frames, num_frames_video = extract_video_frames(video_path, frame_idx_to_extract)
+            frames, extracted_frames_idx, num_frames_video = extract_video_frames(video_path, frame_idx_to_extract)
 
             if len(frames) > 0:
                 print(f'input_folder: {input_folder}')
                 print(f'    video {v_idx}/{len(files_list)-1}: {video_path}')
                 video_name = video_path.split('/')[-1].split('.')[0]
-                for f_idx, (frame_idx, frame) in enumerate(zip(frame_idx_to_extract, frames)):
+                for f_idx, (frame_idx, frame) in enumerate(zip(extracted_frames_idx, frames)):
                     frame_filename = f'{video_name}_frame_{frame_idx:04d}.png'
                     frame_output_path = os.path.join(output_subfolder, frame_filename)
                     print(f'        frame {frame_idx}: frame_output_path:', frame_output_path)
