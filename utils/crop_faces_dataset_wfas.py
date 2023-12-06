@@ -111,7 +111,7 @@ def crop_save_faces(files_list, args, annotation_ext='txt'):
 
         output_crop_name = img_path.split('/')[-1]
         output_crop_name = output_crop_name.replace('.'+args.ext, '.png')
-        output_crop_dir = os.path.dirname(img_path.replace(args.input, args.output))
+        output_crop_dir = os.path.dirname(img_path.replace(args.input.rstrip('/'), args.output.rstrip('/')))
         output_crop_path = os.path.join(output_crop_dir, output_crop_name)
         if not os.path.exists(output_crop_path):
             os.makedirs(output_crop_dir, exist_ok=True)
@@ -127,7 +127,7 @@ def crop_save_faces(files_list, args, annotation_ext='txt'):
             face_img_copy = draw_lmks(face_img_copy, lmks)
             # face_name = '%s_bbox.png'%(input_img_path.split('/')[-1].split('.')[0])
             output_bbox_lmk_path = output_crop_path.replace('.png', '_bbox_lmk.png')
-            print(f'Saving {output_bbox_lmk_path}')
+            print(f'Saving \'{output_bbox_lmk_path}\'')
             cv2.imwrite(output_bbox_lmk_path, face_img_copy)
 
         end_time = time.time()
